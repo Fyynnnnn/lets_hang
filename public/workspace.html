@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Let's Hang | 我的活動</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page-body">
+    <div class="container wide">
+      <header class="topbar">
+        <a href="/workspace" class="brand-wrap">
+          <div class="brand-badge" aria-label="Let's Hang">🎉</div>
+          <div>
+            <div class="brand-name">Let's Hang</div>
+            <div class="brand-subtitle">活動工作台</div>
+          </div>
+        </a>
+        <div class="workspace-user">
+          <span id="workspaceGreeting"></span>
+          <button id="notificationBell" class="notification-bell" type="button" aria-label="活動通知">
+            <span class="bell-icon">🔔</span><span id="notificationDot" class="notification-dot hidden"></span>
+          </button>
+          <button id="logoutBtn" class="secondary-btn">登出</button>
+        </div>
+      </header>
+
+      <div id="notificationPopover" class="notification-popover hidden"></div>
+
+      <main class="workspace-shell">
+        <section class="workspace-hero">
+          <span class="eyebrow">WELCOME BACK</span>
+          <h1>你的活動工作台</h1>
+          <p>發起活動、加入邀約，或集中管理你正在進行的活動。</p>
+          <div class="workspace-actions">
+            <a class="primary-btn" href="/organizer">發起活動</a>
+            <a class="secondary-btn" href="/join">參加活動</a>
+          </div>
+        </section>
+
+        <section class="workspace-section" id="hostedCurrent">
+          <div class="section-heading compact"><span class="eyebrow">ACTIVE</span><h2>進行中</h2></div>
+          <div id="currentList" class="event-list dashboard-grid"></div>
+        </section>
+
+        <section class="workspace-section">
+          <div class="section-heading compact"><span class="eyebrow">COMPLETED</span><h2>已結束</h2></div>
+          <div id="pastList" class="event-list dashboard-grid"></div>
+        </section>
+      </main>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

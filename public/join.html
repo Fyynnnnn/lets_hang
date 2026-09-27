@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Let's Hang | 參加活動</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page-body">
+    <div class="container narrow">
+      <header class="topbar">
+        <a href="index.html" class="brand-wrap">
+          <div class="brand-badge" aria-label="Let's Hang">🎉</div>
+          <div>
+            <div class="brand-name">Let's Hang</div>
+            <div class="brand-subtitle">聚會邀約平台</div>
+          </div>
+        </a>
+        <button type="button" class="back-btn" data-back>← 返回</button>
+      </header>
+
+      <main class="panel form-panel">
+        <div class="section-heading">
+          <span class="eyebrow">加入活動</span>
+          <h1>輸入活動碼</h1>
+        </div>
+
+        <form id="joinForm">
+          <label>
+            <span>活動碼</span>
+            <input type="text" id="eventCode" placeholder="例如：A7F3C9" maxlength="12" required />
+          </label>
+
+          <label>
+            <span>你的名字</span>
+            <input type="text" id="guestName" placeholder="登入後會自動帶入你的暱稱" autocomplete="nickname" required />
+            <small id="guestNameHint" class="field-hint">登入時的暱稱會自動帶入，也可以自行修改。</small>
+          </label>
+
+          <button type="submit" class="primary-btn">進入活動</button>
+        </form>
+
+        <div id="joinError" class="error-box hidden">找不到對應的活動碼，請確認後再試。</div>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

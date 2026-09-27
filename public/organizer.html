@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Let's Hang | 辦活動</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page-body">
+    <div class="container narrow">
+      <header class="topbar">
+        <a href="index.html" class="brand-wrap">
+          <div class="brand-badge" aria-label="Let's Hang">🎉</div>
+          <div>
+            <div class="brand-name">Let's Hang</div>
+            <div class="brand-subtitle">聚會邀約平台</div>
+          </div>
+        </a>
+        <button type="button" class="back-btn" data-back>← 返回</button>
+      </header>
+
+      <main class="panel form-panel">
+        <div class="section-heading organizer-heading">
+          <div>
+            <span class="eyebrow">建立活動</span>
+            <h1>建立新邀約</h1>
+          </div>
+          <button type="button" id="deleteEventBtn" class="delete-event-btn hidden">刪除活動</button>
+        </div>
+
+        <form id="organizerForm">
+          <div class="form-grid two-col">
+            <label>
+              <span>主辦人名稱</span>
+              <input type="text" id="organizerName" name="organizerName" placeholder="例如：Alicia" required />
+            </label>
+            <label>
+              <span>活動主題</span>
+              <input type="text" id="title" name="title" placeholder="例如：夏日海邊 BBQ 派對" required />
+            </label>
+          </div>
+
+          <label>
+            <span>活動概述</span>
+            <textarea id="summary" name="summary" rows="4" placeholder="簡單描述這場活動的目的和內容" required></textarea>
+          </label>
+
+          <div class="form-grid four-col event-time-grid">
+            <label>
+              <span>開始日期</span>
+              <input type="date" id="date" name="date" required />
+            </label>
+            <label>
+              <span>開始時間</span>
+              <input type="time" id="startTime" name="startTime" />
+            </label>
+            <label>
+              <span>結束日期</span>
+              <input type="date" id="endDate" name="endDate" required />
+            </label>
+            <label>
+              <span>結束時間</span>
+              <input type="time" id="endTime" name="endTime" />
+            </label>
+          </div>
+          <small id="eventTimeHint" class="field-hint">同日活動的結束時間不能早於開始時間；跨日活動可選不同的結束日期。</small>
+
+          <label class="location-field">
+            <span>活動地點或地址</span>
+            <input type="text" id="locationSearch" name="location" placeholder="輸入地名、店家或地址" autocomplete="off" required />
+            <input type="hidden" id="address" name="address" />
+            <input type="hidden" id="latitude" name="latitude" />
+            <input type="hidden" id="longitude" name="longitude" />
+            <small id="locationHint" class="field-hint">可直接手動輸入；選取建議後會自動帶入詳細地址。</small>
+            <div id="locationSuggestions" class="location-suggestions hidden" role="listbox"></div>
+          </label>
+
+          <label>
+            <span>補充安排</span>
+            <textarea id="notes" name="notes" rows="3" placeholder="例如：帶飲料／集合地點／交通資訊／需預約"></textarea>
+          </label>
+
+          <button type="submit" class="primary-btn">產生活動碼並建立邀約</button>
+        </form>
+
+        <div id="resultCard" class="result-card hidden">
+          <h3>邀約已建立</h3>
+          <p>請將以下活動碼分享給受邀者，讓他們可直接加入。</p>
+          <div class="code-box">
+            <span>活動碼</span>
+            <strong id="eventCodeText">--</strong>
+            <button type="button" id="copyCodeBtn" class="secondary-btn compact-copy-btn">複製</button>
+          </div>
+          <div class="link-row">
+            <input id="eventInviteLink" type="text" readonly />
+            <button type="button" id="copyLinkBtn" class="secondary-btn">複製連結</button>
+          </div>
+          <a id="openInvitePage" class="secondary-link" href="#">查看邀請頁面</a>
+        </div>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

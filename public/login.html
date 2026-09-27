@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Let's Hang | 登入</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page-body">
+    <div class="container narrow">
+      <header class="topbar">
+        <div class="brand-wrap">
+          <div class="brand-badge" aria-label="Let's Hang">🎉</div>
+          <div>
+            <div class="brand-name">Let's Hang</div>
+            <div class="brand-subtitle">聚會邀約平台</div>
+          </div>
+        </div>
+        <button type="button" class="back-btn" data-back>← 返回</button>
+      </header>
+
+      <main class="panel form-panel auth-shell">
+        <div class="section-heading compact">
+          <span class="eyebrow">ONE ACCOUNT</span>
+          <h1>登入 Let's Hang</h1>
+          <p>登入後就能管理你的活動與參加紀錄。</p>
+        </div>
+        <form id="loginForm" class="auth-form">
+          <label>
+            <span>電子信箱</span>
+            <input type="email" id="loginEmail" list="savedEmails" autocomplete="email" placeholder="name@example.com" required />
+          </label>
+          <datalist id="savedEmails"></datalist>
+          <label>
+            <span>密碼</span>
+            <input type="password" id="loginPassword" placeholder="請輸入密碼" required />
+          </label>
+          <button type="submit" class="primary-btn">登入</button>
+        </form>
+
+        <form id="registerForm" class="auth-form hidden">
+          <label>
+            <span>姓名</span>
+            <input type="text" id="registerName" placeholder="請輸入姓名" required />
+          </label>
+          <label>
+            <span>暱稱</span>
+            <input type="text" id="registerNickname" placeholder="活動中顯示的名稱" required />
+          </label>
+          <label>
+            <span>電子信箱</span>
+            <input type="email" id="registerEmail" list="savedEmails" autocomplete="email" placeholder="name@example.com" required />
+          </label>
+          <label>
+            <span>密碼</span>
+            <input type="password" id="registerPassword" placeholder="設定密碼" required />
+          </label>
+          <button type="submit" class="primary-btn">註冊</button>
+        </form>
+
+        <div class="auth-toggle">
+          <button type="button" class="tab-btn active" data-auth="login">登入</button>
+          <button type="button" class="tab-btn" data-auth="register">註冊</button>
+        </div>
+
+        <div id="authMessage" class="message-box hidden"></div>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

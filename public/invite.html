@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Let's Hang | 聚會邀約</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="invite-page">
+    <div class="container">
+      <header class="page-header invite-header">
+        <div>
+          <span class="eyebrow">邀請函</span>
+          <h1 id="eventTitle">載入中...</h1>
+        </div>
+        <button type="button" class="back-btn" data-back>← 返回</button>
+      </header>
+
+      <main class="invite-layout">
+        <section class="panel hero-panel">
+          <div class="event-summary-wrap">
+            <p id="eventSummary" class="event-summary"></p>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-box">
+              <span>日期</span>
+              <strong id="eventDate"></strong>
+            </div>
+            <div class="info-box">
+              <span>時間</span>
+              <strong id="eventTime"></strong>
+            </div>
+            <div class="info-box">
+              <span>地點</span>
+              <a id="eventLocation" class="map-link" target="_blank" rel="noopener noreferrer"></a>
+            </div>
+            <div class="info-box">
+              <span>主辦人</span>
+              <strong id="eventOrganizer"></strong>
+            </div>
+          </div>
+
+          <div id="eventAddressBox" class="address-box hidden">
+            <span>詳細地址</span>
+            <strong id="eventAddress"></strong>
+          </div>
+
+          <div id="eventNotesBox" class="notes-box hidden">
+            <h3>活動安排</h3>
+            <p id="eventNotes"></p>
+          </div>
+        </section>
+
+        <aside class="panel weather-panel">
+          <div class="weather-head">
+            <h2>活動當天預測天氣</h2>
+            <span class="weather-tag">預測</span>
+          </div>
+          <p id="weatherBasis" class="weather-basis"></p>
+          <div class="weather-main">
+            <div class="large-temp" id="weatherTemp">--</div>
+            <div class="weather-icon" id="weatherIcon">☀️</div>
+          </div>
+          <ul class="weather-list">
+            <li><span>狀況</span><strong id="weatherCondition">--</strong></li>
+            <li><span>降雨機率</span><strong id="weatherRain">--</strong></li>
+            <li><span>風力</span><strong id="weatherWind">--</strong></li>
+          </ul>
+        </aside>
+      </main>
+
+      <section id="shareBox" class="panel share-panel hidden">
+        <div class="section-heading compact">
+          <span class="eyebrow">SHARE</span>
+          <h2>邀請資訊</h2>
+        </div>
+        <div class="share-grid">
+          <div class="share-field">
+            <span>活動碼</span>
+            <div class="share-control">
+              <strong id="shareEventCode">--</strong>
+              <button type="button" id="copyShareCodeBtn" class="secondary-btn">複製活動碼</button>
+            </div>
+          </div>
+          <div class="share-field">
+            <span>邀請連結</span>
+            <div class="share-control">
+              <input id="shareInviteLink" type="text" readonly />
+              <button type="button" id="copyShareLinkBtn" class="secondary-btn">複製連結</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel rsvp-panel">
+        <div class="rsvp-header">
+          <h2 id="rsvpHeading">請填寫你的資訊</h2>
+          <span id="statusBadge" class="status-badge neutral">尚未回覆</span>
+        </div>
+
+        <div id="attendanceSummary" class="attendance-summary"></div>
+        <ul id="attendeeList" class="attendee-list"></ul>
+
+        <form id="rsvpForm">
+          <label>
+            <span>你的名字</span>
+            <input type="text" id="guestName" placeholder="登入後會自動帶入你的暱稱" autocomplete="nickname" required />
+            <small class="field-hint">已帶入你的暱稱，也可以自行修改。</small>
+          </label>
+
+          <div class="button-group">
+            <button type="submit" data-status="join" class="primary-btn">我要參加</button>
+            <button type="button" data-status="decline" class="danger-btn">不能參加</button>
+          </div>
+        </form>
+
+        <div id="cancelBox" class="cancel-box hidden">
+          <h3>取消申請</h3>
+          <p>活動開始前 12 小時內取消，請提交申請。</p>
+          <form id="cancelForm">
+            <label>
+              <span>姓名</span>
+              <input type="text" id="cancelName" placeholder="請輸入姓名" />
+            </label>
+            <label>
+              <span>取消理由</span>
+              <textarea id="cancelReason" rows="3" placeholder="說明取消原因"></textarea>
+            </label>
+            <button type="submit" class="secondary-btn">提交申請</button>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
