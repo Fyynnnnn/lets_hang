@@ -11,6 +11,38 @@ npm start
 
 Open <http://localhost:3000>.
 
+## Storage: where the data actually lives
+
+The app has two storage backends, chosen automatically:
+
+| Environment variable | Backend | Used for |
+| --- | --- | --- |
+| `DATABASE_URL` **not set** | local JSON files in `data/` | local development only |
+| `DATABASE_URL` **set** | Postgres (Neon / Supabase / Render Postgres) | anything public |
+
+**Never rely on the JSON files in a deployment.** Render's free plan has an
+ephemeral filesystem: local file changes are lost whenever the service
+**redeploys, restarts, or spins down** — and a free service spins down after
+just 15 minutes without traffic, wiping every account and event stored in
+`data/*.json`. This is why `data/*.json` is in `.gitignore`.
+
+### Configure the database on Render
+
+1. Create a free Postgres database (e.g. Neon) and copy its connection string.
+2. In Render, open this service → **Environment**, add a variable:
+   - Key: `DATABASE_URL`
+   - Value: the connection string (e.g. `postgres://…@….neon.tech/neondb?sslmode=require`)
+3. Save. Render redeploys automatically; the logs should show
+   `Storage backend: Postgres (…)`.
+
+Setting only `DATABASE_URL` is enough — no code changes.
+
+### Sessions
+
+The app keeps login sessions in memory, so users need to sign in again after a
+restart or redeploy. Accounts, events, and notifications survive because they
+live in Postgres.
+
 ## Live
 
 <https://lets-hang-r9jg.onrender.com>
@@ -34,9 +66,3 @@ git push -u origin main
 4. Render reads `render.yaml`, builds with `npm install`, starts with `npm start`, and checks `/health`.
 5. When the deploy finishes, open the `onrender.com` URL shown by Render and test registration and event creation.
 6. Future changes can be published by committing and pushing them to `main`; Render auto-deploys updates.
-
-## Prototype data warning
-
-This version stores accounts, events, and notifications as JSON files. The files are intentionally excluded from GitHub. Render's free web service has an ephemeral filesystem, so data can reset after a restart or redeploy. Use this deployment to preview the app, not as the permanent home for friends' accounts or event history. Before relying on persistent user data, move storage to a managed database or explicitly configure persistent storage and backups.
-
-The app uses in-memory sessions, so users may need to sign in again after a server restart or deploy.

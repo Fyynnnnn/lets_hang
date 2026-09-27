@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { Pool } = require('pg');
 
 function loadEnvironmentFile() {
   const envPath = path.join(__dirname, '.env');
@@ -65,27 +66,108 @@ function writeJson(filePath, data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
+// Storage backend
+// ----------------
+// Without DATABASE_URL the app keeps using local JSON files (fine for local
+// development). With DATABASE_URL (Postgres/Neon/Supabase) the same data is
+// mirrored to the database, because hosts such as Render's free plan wipe the
+// local filesystem whenever the service redeploys, restarts or spins down.
+// Reads stay synchronous from an in-memory copy; writes are queued so they can
+// never land out of order.
+const dbPool = process.env.DATABASE_URL
+  ? new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: /sslmode=(disable|allow|prefer)/i.test(process.env.DATABASE_URL)
+        ? undefined
+        : { rejectUnauthorized: false }
+    })
+  : null;
+
+const dbCache = {
+  users: { users: [] },
+  events: { events: [] },
+  notifications: { notifications: [] }
+};
+
+let dbWriteQueue = Promise.resolve();
+
+function persistToDb(collection) {
+  if (!dbPool) return;
+  const payload = JSON.stringify(dbCache[collection]);
+  dbWriteQueue = dbWriteQueue
+    .then(() =>
+      dbPool.query(
+        'INSERT INTO app_state (id, data) VALUES ($1, $2::jsonb) ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data',
+        [collection, payload]
+      )
+    )
+    .catch((error) => {
+      console.error(`Failed to persist "${collection}":`, error.message);
+    });
+}
+
+async function initStorage() {
+  if (!dbPool) {
+    console.log('Storage backend: local JSON files');
+    return;
+  }
+  await dbPool.query(
+    'CREATE TABLE IF NOT EXISTS app_state (id TEXT PRIMARY KEY, data JSONB NOT NULL)'
+  );
+  const result = await dbPool.query('SELECT id, data FROM app_state');
+  result.rows.forEach((row) => {
+    if (Object.prototype.hasOwnProperty.call(dbCache, row.id)) {
+      dbCache[row.id] = row.data;
+    }
+  });
+  console.log(
+    `Storage backend: Postgres (${result.rows.length} collection(s) loaded)`
+  );
+}
+
+dbPool?.on('error', (error) => {
+  console.error('Postgres pool error:', error.message);
+});
+
 function loadUsers() {
+  if (dbPool) return dbCache.users.users || [];
   return readJson(USERS_PATH, { users: [] }).users || [];
 }
 
 function saveUsers(users) {
+  if (dbPool) {
+    dbCache.users = { users };
+    persistToDb('users');
+    return;
+  }
   writeJson(USERS_PATH, { users });
 }
 
 function loadEvents() {
+  if (dbPool) return dbCache.events.events || [];
   return readJson(EVENTS_PATH, { events: [] }).events || [];
 }
 
 function saveEvents(events) {
+  if (dbPool) {
+    dbCache.events = { events };
+    persistToDb('events');
+    return;
+  }
   writeJson(EVENTS_PATH, { events });
 }
 
 function loadNotifications() {
+  if (dbPool) return dbCache.notifications.notifications || [];
   return readJson(NOTIFICATIONS_PATH, { notifications: [] }).notifications || [];
 }
 
 function saveNotifications(notifications) {
+  if (dbPool) {
+    dbCache.notifications = { notifications };
+    persistToDb('notifications');
+    return;
+  }
   writeJson(NOTIFICATIONS_PATH, { notifications });
 }
 
@@ -679,6 +761,22 @@ app.post('/api/events/:slug/cancel-request', (req, res) => {
   return res.json({ success: true, message: '取消申請已提交。' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Party invite platform is running at http://localhost:${PORT}`);
+process.on('SIGTERM', () => {
+  Promise.race([
+    dbWriteQueue,
+    new Promise((resolve) => setTimeout(resolve, 3000))
+  ]).then(() => process.exit(0));
 });
+
+initStorage()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Party invite platform is running at http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    // Fail fast instead of serving with an empty cache: writing back an empty
+    // cache could overwrite everything that is already stored in the database.
+    console.error('Failed to initialise storage:', error);
+    process.exit(1);
+  });
