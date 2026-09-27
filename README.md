@@ -11,6 +11,10 @@ npm start
 
 Open <http://localhost:3000>.
 
+## Live
+
+<https://lets-hang-r9jg.onrender.com>
+
 ## Publish with GitHub and Render
 
 1. Create a new GitHub repository. Do not upload `.env`, `data/*.json`, or `node_modules/`; they are excluded by `.gitignore`.
